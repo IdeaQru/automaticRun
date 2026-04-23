@@ -3,7 +3,7 @@
 # Executes: onboarding, generate_report, create_voyage with dynamic date range
 
 param(
-    [string]$WorkingDirectory = "D:\AdaSystem\ada-report_v2\dist\bin"
+    [string]$WorkingDirectory = "C:\Users\ThinkPad\OneDrive - PT SLI\ADA - Documents\Operations-DEV\bin"
 )
 
 # Change to working directory
