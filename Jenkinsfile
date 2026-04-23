@@ -14,7 +14,7 @@ pipeline {
         stage('Run Automated Tasks') {
             steps {
                 powershell '''
-                    D:\\automaticRun\\jenkins_build.ps1
+                    D:\\adaSystem\\automaticRun\\jenkins_build.ps1
                 '''
             }
         }
