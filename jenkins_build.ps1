@@ -5,7 +5,6 @@
 param(
     [string]$WorkingDirectory = "C:\Users\ThinkPad\OneDrive - PT SLI\ADA - Documents\Operations-DEV\bin"
 )
-
 # Change to working directory
 Set-Location -Path $WorkingDirectory
 
