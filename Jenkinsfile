@@ -1,12 +1,13 @@
 pipeline {
     agent { label 'DevDevice' }
 
-    triggers {
-        cron('H 0 * * 1')  // Every Monday
+    parameters {
+        booleanParam(name: 'RUN_ONBOARDING', defaultValue: true, description: 'Run onboarding step')
+        booleanParam(name: 'RUN_CREATE_VOYAGE', defaultValue: true, description: 'Run create_voyage step')
     }
 
-    environment {
-        SCRIPT = 'C:\\Users\\ThinkPad\\OneDrive - PT SLI\\ADA - Documents\\Operations-DEV\\bin\\jenkins_build.ps1'
+    triggers {
+        cron('H 0 * * 1')  // Every Monday
     }
 
     options {
@@ -21,7 +22,12 @@ pipeline {
                 echo "==========================================="
                 echo "ADA System Automated Tasks"
                 echo "==========================================="
-                powershell "& '${env.SCRIPT}'"
+                powershell -NoProfile '''
+                    $argList = @()
+                    if (-not \$env:RUN_ONBOARDING) { $argList += "-SkipOnboarding" }
+                    if (-not \$env:RUN_CREATE_VOYAGE) { $argList += "-SkipCreateVoyage" }
+                    & "C:\\Users\\ThinkPad\\OneDrive - PT SLI\\ADA - Documents\\Operations-DEV\\bin\\jenkins_build.ps1" $argList 2>&1 | Out-Default
+                '''
             }
         }
     }
