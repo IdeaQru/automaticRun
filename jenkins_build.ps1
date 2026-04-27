@@ -3,7 +3,7 @@
 # Executes: onboarding, generate_report, create_voyage with dynamic date range
 
 param(
-    [string]$WorkingDirectory = "C:\Users\ThinkPad\OneDrive - PT SLI\ADA - Documents\Operations-DEV\bin",
+     [string]$WorkingDirectory = "C:\Users\ThinkPad\OneDrive - PT SLI\ADA - Documents\Operations-DEV\bin"
     [switch]$SkipOnboarding,
     [switch]$SkipCreateVoyage
 )
