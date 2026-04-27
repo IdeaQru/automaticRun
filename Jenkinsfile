@@ -1,5 +1,5 @@
 pipeline {
-    agent DevDevice
+     agent { label 'DevDevice' }
 
     parameters {
         booleanParam(name: 'RUN_ONBOARDING', defaultValue: true, description: 'Run onboarding step')
