@@ -19,7 +19,7 @@ pipeline {
     stages {
         stage('Run') {
             steps {
-                powershell -NoProfile -File "C:\\Users\\ThinkPad\\OneDrive - PT SLI\\ADA - Documents\\Operations-DEV\\bin\\jenkins_run.ps1"
+                powershell -NoProfile -File "D:/AdaSystem/automaticRun/jenkins_run.ps1"
             }
         }
     }
