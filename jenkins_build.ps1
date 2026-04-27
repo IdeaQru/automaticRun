@@ -3,12 +3,12 @@
 # Executes: onboarding, generate_report, create_voyage with dynamic date range
 
 param(
-     [string]$WorkingDirectory = "C:\Users\ThinkPad\OneDrive - PT SLI\ADA - Documents\Operations-DEV\bin"
+    [string]$BinDirectory = "C:\Users\ThinkPad\OneDrive - PT SLI\ADA - Documents\Operations-DEV\bin",
     [switch]$SkipOnboarding,
     [switch]$SkipCreateVoyage
 )
 # Change to working directory
-Set-Location -Path $WorkingDirectory
+Set-Location -Path "D:\AdaSystem\automaticRun"
 
 Write-Host "=============================================="
 Write-Host "ADA System Automated Tasks - Starting"
@@ -38,7 +38,7 @@ Write-Host ""
 # Step 1: Onboarding
 if (-not $SkipOnboarding) {
     Write-Host "[1/3] Running onboarding..."
-    & "$WorkingDirectory\onboarding" onboard --all
+    & "$BinDirectory\onboarding" onboard --all
     if ($LASTEXITCODE -ne 0) {
         Write-Host "ERROR: Onboarding failed with exit code $LASTEXITCODE" -ForegroundColor Red
         exit $LASTEXITCODE
@@ -52,7 +52,7 @@ if (-not $SkipOnboarding) {
 if (-not $SkipCreateVoyage) {
     Write-Host ""
     Write-Host "[2/3] Running create_voyage..."
-    & "$WorkingDirectory\create_voyage" --start $startDate.ToString('yyyy-MM-dd') --end $endDate.ToString('yyyy-MM-dd')
+    & "$BinDirectory\create_voyage" --start $startDate.ToString('yyyy-MM-dd') --end $endDate.ToString('yyyy-MM-dd')
     if ($LASTEXITCODE -ne 0) {
         Write-Host "ERROR: Create voyage failed with exit code $LASTEXITCODE" -ForegroundColor Red
         exit $LASTEXITCODE
@@ -65,7 +65,7 @@ if (-not $SkipCreateVoyage) {
 # Step 3: Generate Report
 Write-Host ""
 Write-Host "[3/3] Running generate_report..."
-& "$WorkingDirectory\generate_report" --start $startDate.ToString('yyyy-MM-dd') --end $endDate.ToString('yyyy-MM-dd')
+& "$BinDirectory\generate_report" --start $startDate.ToString('yyyy-MM-dd') --end $endDate.ToString('yyyy-MM-dd')
 if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: Generate report failed with exit code $LASTEXITCODE" -ForegroundColor Red
     exit $LASTEXITCODE
