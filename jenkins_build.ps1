@@ -3,7 +3,9 @@
 # Executes: onboarding, generate_report, create_voyage with dynamic date range
 
 param(
-    [string]$WorkingDirectory = "C:\Users\ThinkPad\OneDrive - PT SLI\ADA - Documents\Operations-DEV\bin"
+    [string]$WorkingDirectory = "C:\Users\ThinkPad\OneDrive - PT SLI\ADA - Documents\Operations-DEV\bin",
+    [switch]$SkipOnboarding,
+    [switch]$SkipCreateVoyage
 )
 # Change to working directory
 Set-Location -Path $WorkingDirectory
@@ -34,31 +36,33 @@ Write-Host "Date Range: $($startDate.ToString('yyyy-MM-dd')) to $($endDate.ToStr
 Write-Host ""
 
 # Step 1: Onboarding
-Write-Host "[1/3] Running onboarding..."
-& "$WorkingDirectory\onboarding" onboard --all
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "ERROR: Onboarding failed with exit code $LASTEXITCODE" -ForegroundColor Red
-    exit $LASTEXITCODE
+if (-not $SkipOnboarding) {
+    Write-Host "[1/3] Running onboarding..."
+    & "$WorkingDirectory\onboarding" onboard --all
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "ERROR: Onboarding failed with exit code $LASTEXITCODE" -ForegroundColor Red
+        exit $LASTEXITCODE
+    }
+    Write-Host "Onboarding completed successfully" -ForegroundColor Green
+} else {
+    Write-Host "[1/3] Skipping onboarding (RUN_ONBOARDING=false)" -ForegroundColor Yellow
 }
-Write-Host "Onboarding completed successfully" -ForegroundColor Green
 
-# Step 2: Generate Report
-Write-Host ""
-Write-Host "[2/3] Running create_voyage..."
-
-& "$WorkingDirectory\create_voyage" --start $startDate.ToString('yyyy-MM-dd') --end $endDate.ToString('yyyy-MM-dd')
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "ERROR: Create voyage failed with exit code $LASTEXITCODE" -ForegroundColor Red
-    exit $LASTEXITCODE
+# Step 2: Create Voyage
+if (-not $SkipCreateVoyage) {
+    Write-Host ""
+    Write-Host "[2/3] Running create_voyage..."
+    & "$WorkingDirectory\create_voyage" --start $startDate.ToString('yyyy-MM-dd') --end $endDate.ToString('yyyy-MM-dd')
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "ERROR: Create voyage failed with exit code $LASTEXITCODE" -ForegroundColor Red
+        exit $LASTEXITCODE
+    }
+    Write-Host "Create voyage completed successfully" -ForegroundColor Green
+} else {
+    Write-Host "[2/3] Skipping create_voyage (RUN_CREATE_VOYAGE=false)" -ForegroundColor Yellow
 }
-& "$WorkingDirectory\generate_report" --start $startDate.ToString('yyyy-MM-dd') --end $endDate.ToString('yyyy-MM-dd')
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "ERROR: Generate report failed with exit code $LASTEXITCODE" -ForegroundColor Red
-    exit $LASTEXITCODE
-}
-Write-Host "Generate report completed successfully" -ForegroundColor Green
 
-# Step 3: Create Voyage
+# Step 3: Generate Report
 Write-Host ""
 Write-Host "[3/3] Running generate_report..."
 & "$WorkingDirectory\generate_report" --start $startDate.ToString('yyyy-MM-dd') --end $endDate.ToString('yyyy-MM-dd')
@@ -66,7 +70,7 @@ if ($LASTEXITCODE -ne 0) {
     Write-Host "ERROR: Generate report failed with exit code $LASTEXITCODE" -ForegroundColor Red
     exit $LASTEXITCODE
 }
-Write-Host "Create voyage completed successfully" -ForegroundColor Green
+Write-Host "Generate report completed successfully" -ForegroundColor Green
 
 Write-Host ""
 Write-Host "=============================================="
