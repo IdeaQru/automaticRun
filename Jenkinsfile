@@ -19,11 +19,10 @@ pipeline {
         stage('Run Automated Tasks') {
             steps {
                 powershell '''
-                    \$params = @{}
-                    if (-not \$env:RUN_ONBOARDING) { \$params['skip_onboarding'] = \$true }
-                    if (-not \$env:RUN_CREATE_VOYAGE) { \$params['skip_create_voyage'] = \$true }
-
-                    & "D:\\AdaSystem\\automaticRun\\jenkins_build.ps1" @\$params
+                    $argList = @()
+                    if (-not $env:RUN_ONBOARDING) { $argList += '-SkipOnboarding' }
+                    if (-not $env:RUN_CREATE_VOYAGE) { $argList += '-SkipCreateVoyage' }
+                    & "D:\\AdaSystem\\automaticRun\\jenkins_build.ps1" $argList
                 '''
             }
         }
