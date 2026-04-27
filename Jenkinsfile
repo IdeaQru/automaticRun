@@ -1,31 +1,33 @@
 pipeline {
-     agent { label 'DevDevice' }
+    agent { label 'DevDevice' }
 
     triggers {
-        cron('10 0 * * 1')
+        cron('H 0 * * 1')  // Every Monday
+    }
+
+    environment {
+        SCRIPT = 'C:\\Users\\ThinkPad\\OneDrive - PT SLI\\ADA - Documents\\Operations-DEV\\bin\\jenkins_build.ps1'
     }
 
     options {
         timestamps()
-        timeout(time: 1, unit: 'HOURS')
+        timeout(time: 2, unit: 'HOURS')
+        buildDiscarder(logRotator(numToKeepStr: '10'))
     }
 
     stages {
-        stage('Run Automated Tasks') {
+        stage('Run') {
             steps {
-                powershell '''
-                    "C:\\Users\\ThinkPad\\OneDrive - PT SLI\\ADA - Documents\\Operations-DEV\\bin\\jenkins_build.ps1"
-                '''
+                echo "==========================================="
+                echo "ADA System Automated Tasks"
+                echo "==========================================="
+                powershell "& '${env.SCRIPT}'"
             }
         }
     }
 
     post {
-        success {
-            echo 'Automated tasks completed successfully'
-        }
-        failure {
-            echo 'Automated tasks failed'
-        }
+        success { echo '[SUCCESS] All tasks completed!' }
+        failure { echo '[FAILED] Check logs for errors' }
     }
 }
